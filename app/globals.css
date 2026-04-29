@@ -24,3 +24,16 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.input {
+  @apply w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#ff6a00];
+}
+
+.label {
+  @apply block text-sm font-medium mb-1 text-gray-700;
+}
+
+.input {
+  @apply w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#ff6a00];
+}
+
