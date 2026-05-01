@@ -24,7 +24,8 @@ import { ADMIN_EMAIL } from "@/lib/config";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const [cartCount] = useState(2);
+
+  const [cartCount, setCartCount] = useState(0);
 
   const { user, isSignedIn, isLoaded } = useUser();
 
@@ -40,13 +41,31 @@ console.log("isSignedIn:", isSignedIn);
 console.log("User email:", user?.primaryEmailAddress?.emailAddress);
 console.log("Admin email:", ADMIN_EMAIL);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+useEffect(() => {
+  const updateCart = () => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    const total = cart.reduce((acc: number, item: any) => {
+      return acc + item.quantity;
+    }, 0);
+
+    setCartCount(total);
+  };
+
+  updateCart();
+
+  window.addEventListener("cartUpdated", updateCart);
+
+  return () => window.removeEventListener("cartUpdated", updateCart);
+}, []);
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setIsSticky(window.scrollY > 50);
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
   return (
     <header

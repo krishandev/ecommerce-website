@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { addToCart } from "@/lib/cart";
 import { FaStar, FaRegStar, FaHeart } from "react-icons/fa";
 
 type ProductCardProps = {
@@ -109,12 +110,19 @@ export default function ProductCard({
 
         {/* Add to Cart */}
         <button
-          onClick={handleAddToCart}
-          aria-label="Add product to cart"
-          className="w-full mt-2 bg-[#ff6a00] text-white text-sm py-2 rounded-full hover:bg-orange-600 transition"
-        >
-          Add to Cart
-        </button>
+  onClick={() =>
+    addToCart({
+      name,
+      slug,
+      image,
+      price,
+      quantity: 1,
+    })
+  }
+  className="bg-[#ff6a00] text-white py-2 cursor-pointer rounded w-full"
+>
+  Add to Cart
+</button>
       </div>
     </div>
   );

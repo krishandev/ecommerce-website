@@ -11,6 +11,7 @@ type Category = {
   _id?: string;
   name: string;
   slug: string;
+  image?: string;
   createdAt?: string;
 };
 
@@ -23,6 +24,7 @@ export default function CategoryManager({
   const [name, setName] = useState("");
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [image, setImage] = useState("");
 
   /* ---------------- FETCH ---------------- */
   const fetchCategories = async () => {
@@ -58,14 +60,14 @@ export default function CategoryManager({
       if (editingSlug) {
         await fetch(`/api/categories/${editingSlug}`, {
           method: "PUT",
-          body: JSON.stringify({ name }),
+          body: JSON.stringify({ name , image}),
           headers: { "Content-Type": "application/json" },
         });
         alert("Category updated");
       } else {
         await fetch("/api/categories", {
           method: "POST",
-          body: JSON.stringify({ name }),
+          body: JSON.stringify({ name, image }),
           headers: { "Content-Type": "application/json" },
         });
         alert("Category added");
@@ -130,6 +132,12 @@ export default function CategoryManager({
           placeholder="Enter category name"
           className="input"
         />
+        <input
+  value={image}
+  onChange={(e) => setImage(e.target.value)}
+  placeholder="Category Image URL"
+  className="input"
+/>
 
         <input
           value={generateSlug(name)}
@@ -166,6 +174,7 @@ export default function CategoryManager({
             <thead className="bg-gray-100">
               <tr>
                 <th className="p-2">#</th>
+                <th className="p-2">Image</th>
                 <th>Name</th>
                 <th>Slug</th>
                 <th>Created</th>
@@ -177,6 +186,14 @@ export default function CategoryManager({
               {categories.map((cat, i) => (
                 <tr key={cat.slug} className="border-t text-center hover:bg-gray-50">
                   <td className="p-2">{i + 1}</td>
+                  {/* IMAGE */}
+  <td className="p-2">
+    <img
+      src={cat.image || "/placeholder.jpg"}
+      alt={cat.name}
+      className="w-12 h-12 object-cover mx-auto rounded"
+    />
+  </td>
                   <td>{cat.name}</td>
                   <td className="text-gray-500">{cat.slug}</td>
                   <td>

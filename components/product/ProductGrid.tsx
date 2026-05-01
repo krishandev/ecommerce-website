@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import ProductCard from "./ProductCard";
 
 type Product = {
@@ -25,18 +26,19 @@ export default function ProductGrid({
   description,
   loading = false,
 }: ProductGridProps) {
+  const [visibleCount, setVisibleCount] = useState(4);
 
-   // ✅ SAFETY CHECK (prevents .map crash)
+
+  // ✅ SAFETY CHECK
   if (!Array.isArray(products)) {
     console.error("❌ Invalid products:", products);
     return null;
   }
 
-  
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-8 py-10">
-
-      {/* Heading (SEO + AEO) */}
+      
+      {/* HEADING */}
       {title && (
         <div className="mb-6 text-center md:text-left">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -50,7 +52,7 @@ export default function ProductGrid({
         </div>
       )}
 
-      {/* LOADING STATE */}
+      {/* LOADING */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -61,26 +63,39 @@ export default function ProductGrid({
           ))}
         </div>
       ) : products.length === 0 ? (
-        /* EMPTY STATE */
+        /* EMPTY */
         <div className="text-center py-16">
           <p className="text-gray-500 text-lg">No products found</p>
         </div>
       ) : (
-        /* PRODUCT GRID */
+        /* GRID */
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
-            <ProductCard key={index} {...product} />
+          {products.slice(0, visibleCount).map((product) => (
+            <ProductCard
+              key={product.slug || product.name}
+              {...product}
+            />
           ))}
         </div>
       )}
 
-      {/* LOAD MORE (Optional UI) */}
-      {!loading && products.length > 0 && (
+      {/* LOAD MORE */}
+      {!loading && visibleCount < products.length && (
         <div className="flex justify-center mt-10">
-          <button className="px-6 py-2 border border-gray-300 rounded-full text-sm hover:bg-[#ff6a00] hover:text-white transition">
-            Load More
+          <button
+            onClick={() => setVisibleCount((prev) => prev + 4)}
+            className="px-6 py-2 border border-gray-300 rounded-full text-sm hover:bg-[#ff6a00] hover:text-white transition"
+          >
+            Load More ({products.length - visibleCount} left)
           </button>
         </div>
+      )}
+
+      {/* END MESSAGE */}
+      {!loading && visibleCount >= products.length && products.length > 8 && (
+        <p className="text-center mt-6 text-gray-400 text-sm">
+          No more products
+        </p>
       )}
     </section>
   );

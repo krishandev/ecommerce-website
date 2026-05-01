@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     const category = await Category.create({
       name: body.name,
       slug,
+      image: body.image,
     });
 
     return NextResponse.json(category, { status: 201 });

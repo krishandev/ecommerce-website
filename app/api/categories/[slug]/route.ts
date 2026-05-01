@@ -27,7 +27,7 @@ export async function PUT(
 
     const updated = await Category.findOneAndUpdate(
       { slug },
-      { name: body.name, slug: newSlug },
+      { name: body.name, slug: newSlug, image: body.image, },
       { new: true }
     );
 
