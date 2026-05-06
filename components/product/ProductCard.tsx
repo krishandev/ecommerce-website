@@ -110,14 +110,15 @@ export default function ProductCard({
 
         {/* Add to Cart */}
         <button
-  onClick={() =>
-    addToCart({
-      name,
-      slug,
-      image,
-      price,
-      quantity: 1,
-    })
+  onClick={async () =>
+  await addToCart({
+    name,
+    slug,
+    image,
+    price,
+    quantity: 1,
+  })
+
   }
   className="bg-[#ff6a00] text-white py-2 cursor-pointer rounded w-full"
 >

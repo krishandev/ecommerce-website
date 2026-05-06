@@ -1,8 +1,16 @@
 "use client";
 
+// ✅ Clerk
+import {
+  UserButton,
+  SignInButton,
+  useUser,
+} from "@clerk/nextjs";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getCart } from "@/lib/cart";
 import {
   Menu,
   X,
@@ -11,12 +19,6 @@ import {
   Search,
 } from "lucide-react";
 
-// ✅ Clerk
-import {
-  UserButton,
-  SignInButton,
-  useUser,
-} from "@clerk/nextjs";
 
 // ✅ Admin config
 import { ADMIN_EMAIL } from "@/lib/config";
@@ -41,31 +43,68 @@ console.log("isSignedIn:", isSignedIn);
 console.log("User email:", user?.primaryEmailAddress?.emailAddress);
 console.log("Admin email:", ADMIN_EMAIL);
 
+
 useEffect(() => {
-  const updateCart = () => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const loadCartCount = async () => {
+    if (!isLoaded) return;
 
-    const total = cart.reduce((acc: number, item: any) => {
-      return acc + item.quantity;
-    }, 0);
+    // ✅ LOGGED USER → DB
+    if (isSignedIn) {
+      try {
+        const res = await fetch("/api/cart");
+        const data = await res.json();
 
-    setCartCount(total);
+        const count =
+          data?.items?.reduce(
+            (acc: number, item: any) => acc + item.quantity,
+            0
+          ) || 0;
+
+        setCartCount(count);
+
+      } catch (err) {
+        console.error("Header cart error:", err);
+      }
+    }
+
+    // ✅ GUEST → LOCAL
+    else {
+      const localCart = getCart();
+
+      const count = localCart.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+
+      setCartCount(count);
+    }
   };
 
-  updateCart();
+  loadCartCount();
 
-  window.addEventListener("cartUpdated", updateCart);
+  // 🔥 listen for updates
+  const handleCartUpdate = () => {
+  loadCartCount();
+};
 
-  return () => window.removeEventListener("cartUpdated", updateCart);
-}, []);
+window.addEventListener("cartUpdated", handleCartUpdate);
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     setIsSticky(window.scrollY > 50);
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+return () => {
+  window.removeEventListener(
+    "cartUpdated",
+    handleCartUpdate
+  );
+};
+
+  return () => {
+    window.removeEventListener(
+      "cartUpdated",
+      loadCartCount
+    );
+  };
+}, [isSignedIn, isLoaded]);
+
+
 
   return (
     <header
