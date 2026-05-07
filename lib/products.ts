@@ -1,3 +1,5 @@
+import { getBaseUrl } from "@/lib/getBaseUrl";
+
 /* -------------------- TYPES -------------------- */
 export type Product = {
   _id?: string;
@@ -34,12 +36,11 @@ export const PRODUCTS: Product[] = [
 
 /* -------------------- API BASE -------------------- */
 // 🔥 VERY IMPORTANT
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
 
 /* -------------------- FETCH HELPER -------------------- */
 async function safeFetch<T>(url: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${url}`, {
+  const res = await fetch(`${getBaseUrl()}${url}`, {
     cache: "no-store", // always fresh
   });
 

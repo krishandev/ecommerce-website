@@ -1,10 +1,12 @@
+import { getBaseUrl } from "@/lib/getBaseUrl";
+
 import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 async function getBlogs() {
-  const res = await fetch("http://localhost:3000/api/blogs", {
+  const res = await fetch(`${getBaseUrl()}/api/blogs`, {
     cache: "no-store",
   });
   return res.json();

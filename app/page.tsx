@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/lib/getBaseUrl";
 import Hero from "@/components/home/Hero";
 import ProductGrid from "@/components/product/ProductGrid";
 import CategoryGrid from "@/components/home/CategoryGrid";
@@ -16,7 +17,7 @@ export default async function Home() {
   
 
   const categories = await fetch(
-  "http://localhost:3000/api/categories",
+  `${getBaseUrl()}/api/categories`,
   { cache: "no-store" } // 🔥 important
 ).then((res) => res.json());
 
