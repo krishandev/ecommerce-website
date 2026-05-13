@@ -158,18 +158,32 @@ return () => {
           )}
 
           {/* USER + ADMIN */}
-          {isSignedIn && (
-            <div className="flex flex-col items-center leading-none">
+          {/* USER + DASHBOARD */}
+{isSignedIn && (
+  <div className="flex items-center gap-4">
 
-              {isAdmin && (
-                <span className="text-[11px] text-[#ff6a00] font-semibold">
-                  Admin
-                </span>
-              )}
+    {/* DASHBOARD */}
+    <Link
+      href="/dashboard"
+      className="text-sm hover:text-[#ff6a00] transition"
+    >
+      Dashboard
+    </Link>
 
-              <UserButton />
-            </div>
-          )}
+    {/* ADMIN */}
+    {isAdmin && (
+      <Link
+        href="/admin"
+        className="text-sm text-[#ff6a00] font-semibold"
+      >
+        Admin
+      </Link>
+    )}
+
+    {/* USER BUTTON */}
+    <UserButton />
+  </div>
+)}
 
           {/* WISHLIST */}
           <Link href="/wishlist">

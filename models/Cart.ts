@@ -6,6 +6,12 @@ const CartItemSchema = new mongoose.Schema({
   image: String,
   price: Number,
   quantity: Number,
+
+  status: {
+  type: String,
+  default: "Active",
+},
+
 });
 
 const CartSchema = new mongoose.Schema(
